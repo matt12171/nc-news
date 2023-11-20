@@ -5,12 +5,14 @@ const {
     handleCustomErrors,
     handleServerErrors,
   } = require("./errors");
+const { getArticlesById } = require('./controllers/article.controller');
 
 const app = express()
 
 
 
 app.get('/api/topics', getTopics)
+app.get('/api/articles/:article_id', getArticlesById)
 
 
 app.use(handleServerErrors);
