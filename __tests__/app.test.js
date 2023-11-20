@@ -12,5 +12,7 @@ afterAll(() => {
 })
 
 describe('/api/topics', ()=> {
-    testData()
+    test('200: responds with 200 status code', ()=> {
+        
+    })
 })
