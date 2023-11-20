@@ -12,7 +12,17 @@ afterAll(() => {
 })
 
 describe('/api/topics', ()=> {
-    test('200: responds with 200 status code', ()=> {
-        
+    test('200: responds with 200 status code and an array of topic objects', ()=> {
+        return request(app)
+            .get('/api/topics')
+            .expect(200)
+            .then(({body}) => {
+                body.topics.forEach((topic) => {
+                    expect(topic).toMatchObject({
+                        description: expect.any(String),
+                        slug: expect.any(String)
+                    })
+                })
+            })
     })
 })
