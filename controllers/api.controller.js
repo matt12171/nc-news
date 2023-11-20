@@ -4,8 +4,8 @@ const { selectApi } = require("../models/api.model")
 exports.getApi = (req, res, next) => {
     selectApi()
         .then((endpoints)=> {
-            const endpointsParsed = JSON.parse(endpoints)
-            res.status(200).send({ endpointsParsed })
+            console.log(endpoints)
+            res.status(200).send({ endpoints })
         })
         .catch((err) => {
             console.log(err)

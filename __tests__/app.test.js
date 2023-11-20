@@ -41,7 +41,7 @@ describe('/api', ()=> {
                     .expect(200)
                     .then(({ body }) => {
                         const endpointsFileParsed = JSON.parse(endpointsFile)
-                        expect(body.endpointsParsed).toEqual(endpointsFileParsed)
+                        expect(body.endpoints).toEqual(endpointsFileParsed)
                     })
             })
     })
