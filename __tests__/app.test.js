@@ -2,8 +2,12 @@ const request = require('supertest')
 const app = require('../app')
 const db = require('../db/connection')
 const seed = require('../db/seeds/seed')
+const fs = require('fs/promises')
+
 
 const testData = require('../db/data/test-data')
+ 
+
 
 beforeEach(() => seed(testData))
 
@@ -24,6 +28,21 @@ describe('/api/topics', ()=> {
                         slug: expect.any(String)
                     })
                 })
+            })
+    })
+})
+
+describe('/api', ()=> {
+    test('200: responds with 200 status code and endpoints for api', ()=> {
+        return fs.readFile('/Users/work/northcoders/backend/be-nc-news/endpoints.json', { encoding: 'utf-8' })
+            .then((endpointsFile) => {
+                return request(app)
+                    .get('/api')
+                    .expect(200)
+                    .then(({ body }) => {
+                        const endpointsFileParsed = JSON.parse(endpointsFile)
+                        expect(body.endpoints).toEqual(endpointsFileParsed)
+                    })
             })
     })
 })
