@@ -17,7 +17,7 @@ app.get('/api/articles/:article_id', getArticlesById)
 
 
 app.use(handlepsqlErrors);
+app.use(handleCustomErrors);
 app.use(handleServerErrors);
-
 
 module.exports = app
