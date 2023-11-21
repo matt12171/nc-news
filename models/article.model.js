@@ -15,7 +15,8 @@ exports.selectArticleById = (id) => {
 
 exports.selectArticles = () => {
     return db.query(
-        `SELECT * FROM articles;`
+        `SELECT * FROM articles
+        ORDER BY created_at DESC`
     ).then((response) => {
         const promise1 = response.rows.map((article)=> {
             return db.query(
@@ -30,9 +31,9 @@ exports.selectArticles = () => {
         })
         return Promise.all(promise1)
             .then((articles) => {
-                console.log(articles)
                 return articles
             })
         
     })
 }
+

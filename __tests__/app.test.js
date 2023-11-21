@@ -103,4 +103,12 @@ describe.only('/api/articles', ()=> {
                 })
             })
     })
+    test('200: check response is sorted by date in descending order', ()=> {
+        return request(app)
+            .get('/api/articles')
+            .expect(200)
+            .then(({ body })=> {
+                expect(body.articles).toBeSorted({ descending: true, key: "created_at" })
+            })
+    })
 })
