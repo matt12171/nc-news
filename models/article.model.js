@@ -12,3 +12,11 @@ exports.selectArticleById = (id) => {
             }
         })
 }
+
+exports.selectArticles = () => {
+    return db.query(
+        `SELECT * FROM articles;`
+    ).then((response) => {
+        return response.rows
+    })
+}

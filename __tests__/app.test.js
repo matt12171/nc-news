@@ -82,3 +82,25 @@ describe('/api/topics/:article_id', ()=> {
             })
     })
 })
+
+describe('/api/articles', ()=> {
+    test('200: responds with 200 status code and returns all articles', ()=> {
+        return request(app)
+            .get('/api/articles')
+            .expect(200)
+            .then(({ body })=> {
+                body.articles.forEach((article)=> {
+                    expect(article).toMatchObject({
+                        article_id: expect.any(Number),
+                        title: expect.any(String),
+                        topic: expect.any(String),
+                        author: expect.any(String),
+                        body: expect.any(String),
+                        created_at: expect.any(String),
+                        votes: expect.any(Number),
+                        article_img_url: expect.any(String)
+                    })
+                })
+            })
+    })
+})
