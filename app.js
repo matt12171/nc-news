@@ -13,7 +13,7 @@ const app = express()
 
 app.get('/api/topics', getTopics)
 app.get('/api/articles/:article_id', getArticlesById)
-// FINISH ARTICLE ID HERE 
+
 
 
 app.use(handlepsqlErrors);
