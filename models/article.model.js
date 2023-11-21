@@ -7,5 +7,8 @@ exports.selectArticleById = (id) => {
         queryStr += `WHERE article_id = $1`
     }
 
-    return db(queryStr, [id])
+    return db.query(queryStr, [id])
+        .then((response) => {
+            return response.rows[0]
+        })
 }
