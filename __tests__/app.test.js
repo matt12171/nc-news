@@ -46,3 +46,39 @@ describe('/api', ()=> {
             })
     })
 })
+
+describe('/api/topics/:article_id', ()=> {
+    test('200: responds with 200 status code and correct article', ()=> {
+        return request(app)
+            .get('/api/articles/1')
+            .expect(200)
+            .then(({ body }) => {
+                expect(body).toMatchObject({
+                    article_id: 1,
+                    title: expect.any(String),
+                    topic: expect.any(String),
+                    author: expect.any(String),
+                    body: expect.any(String),
+                    created_at: expect.any(String),
+                    votes: expect.any(Number),
+                    article_img_url: expect.any(String)
+                })
+            })
+    })
+    test('400: response with 400 status code and error msg when id format is incorrect', ()=> {
+        return request(app)
+            .get('/api/articles/cat')
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe('bad request')
+            })
+    })
+    test('400: response with 400 status code and error msg when id does not exist', ()=> {
+        return request(app)
+            .get('/api/articles/999999')
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe('bad request')
+            })
+    })
+})
