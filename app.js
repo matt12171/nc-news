@@ -16,6 +16,7 @@ app.get('/api/articles/:article_id', getArticlesById)
 // FINISH ARTICLE ID HERE 
 
 
+app.use(handlepsqlErrors);
 app.use(handleServerErrors);
 
 

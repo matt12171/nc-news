@@ -46,9 +46,12 @@ describe('/api/topics/:article_id', ()=> {
                 })
             })
     })
-//     test('400: response with 400 status code and error msg when id does not exist', ()=> {
-//         return request(app)
-//             .get(400)
-//             .expect()
-//     })
+    test('400: response with 400 status code and error msg when id does not exist', ()=> {
+        return request(app)
+            .get('/api/articles/car')
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe('bad request')
+            })
+    })
 })
