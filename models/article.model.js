@@ -17,6 +17,22 @@ exports.selectArticles = () => {
     return db.query(
         `SELECT * FROM articles;`
     ).then((response) => {
-        return response.rows
+        const promise1 = response.rows.map((article)=> {
+            return db.query(
+                `SELECT * FROM comments
+                WHERE article_id = $1`, [article.article_id]
+            )
+            .then((comments)=> {
+                article.comment_count = comments.rows.length
+                delete article.body
+                return article
+            })
+        })
+        return Promise.all(promise1)
+            .then((articles) => {
+                console.log(articles)
+                return articles
+            })
+        
     })
 }
