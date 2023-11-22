@@ -113,3 +113,49 @@ describe('/api/articles', ()=> {
             })
     })
 })
+
+describe('/api/topics/:article_id/comments', ()=> {
+    test('200: responds with 200 status code and comments', ()=> {
+        return request(app)
+            .get('/api/articles/1/comments')
+            .expect(200)
+            .then(({ body }) => {
+                expect(body.comments).toHaveLength(11)
+                expect(body.comments).toBeSorted({ descending: true, key: "created_at" })
+                body.comments.forEach((comment)=> {
+                    expect(comment).toEqual({
+                        comment_id: expect.any(Number),
+                        votes: expect.any(Number),
+                        created_at: expect.any(String),
+                        author: expect.any(String),
+                        body: expect.any(String),
+                        article_id: 1
+                    })
+                })
+            })
+    })
+    test('200: responds with 200 status when given valid id with no comments', ()=> {
+        return request(app)
+            .get('/api/articles/2/comments')
+            .expect(200)
+            .then(({body}) => {
+                expect(body.comments).toEqual([])
+            })
+    })
+    test('404: response with 404 status code and error msg when valid id does not exist', ()=> {
+        return request(app)
+            .get('/api/articles/999999/comments')
+            .expect(404)
+            .then(({ body }) => {
+                expect(body.msg).toBe('not found')
+            })
+    })
+    test('400: response with 400 status code and error msg when id is incorrect format', ()=> {
+        return request(app)
+            .get('/api/articles/dog/comments')
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe('bad request')
+            })
+    })
+})
