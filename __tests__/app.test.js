@@ -73,12 +73,12 @@ describe('/api/topics/:article_id', ()=> {
                 expect(body.msg).toBe('bad request')
             })
     })
-    test('400: response with 400 status code and error msg when id does not exist', ()=> {
+    test('400: response with 404 status code and error msg when id does not exist', ()=> {
         return request(app)
             .get('/api/articles/999999')
-            .expect(400)
+            .expect(404)
             .then(({ body }) => {
-                expect(body.msg).toBe('bad request')
+                expect(body.msg).toBe('not found')
             })
     })
 })
@@ -112,4 +112,81 @@ describe('/api/articles', ()=> {
                 expect(body.articles).toBeSorted({ descending: true, key: "created_at" })
             })
     })
+})
+
+describe('POST /api/articles/:article_id/comments', ()=> {
+    test('201: responds with posted comment', ()=> {
+        const input = {
+            username: 'butter_bridge',
+            body: 'Hello world!'
+        }
+        return request(app)
+            .post('/api/articles/2/comments')
+            .send(input)
+            .expect(201)
+            .then(({ body })=> {
+                expect(body.comment).toMatchObject({
+                    comment_id: expect.any(Number),
+                    votes: expect.any(Number),
+                    created_at: expect.any(String),
+                    author: 'butter_bridge',
+                    body: 'Hello world!',
+                    article_id: 2
+                })
+            })
+    })
+    test('400: responds with 400 when id is incorrect format', ()=> {
+        const input = {
+            username: 'butter_bridge',
+            body: 'Hello world!'
+        }
+        return request(app)
+            .post('/api/articles/dog/comments')
+            .send(input)
+            .expect(400)
+            .then(({body})=> {
+                expect(body.msg).toBe('bad request')
+            })
+    })
+    test('404: responds with 404 when id is correct format but does not exist', ()=> {
+        const input = {
+            username: 'butter_bridge',
+            body: 'Hello world!'
+        }
+        return request(app)
+            .post('/api/articles/99999/comments')
+            .send(input)
+            .expect(404)
+            .then(({body})=> {
+                expect(body.msg).toBe('not found')
+            })
+    })
+    test('400: responds with 400 when input format is incorrect', ()=> {
+        const input = {
+            username: 'butter_bridge',
+            body: 'Hello world!',
+            test: 'dog'
+        }
+        return request(app)
+            .post('/api/articles/2/comments')
+            .send(input)
+            .expect(400)
+            .then(({body})=> {
+                expect(body.msg).toBe('bad request')
+            })
+    })
+    test('404: responds with 400 when input is correct format but username does not exist', ()=> {
+        const input = {
+            username: 'Matt',
+            body: 'Hello world!',
+        }
+        return request(app)
+            .post('/api/articles/2/comments')
+            .send(input)
+            .expect(404)
+            .then(({body})=> {
+                expect(body.msg).toBe('not found')
+            })
+    })
+    
 })
