@@ -43,7 +43,6 @@ exports.selectCommentsByArticle = (id) => {
     WHERE article_id = $1
     ORDER BY comments.created_at DESC`, [id])
     .then((response) => {
-        console.log(response.rows)
         return checkExists("articles", "article_id", id)
         .then(()=> {
             return response.rows
