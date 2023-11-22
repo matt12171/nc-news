@@ -82,3 +82,34 @@ describe('/api/topics/:article_id', ()=> {
             })
     })
 })
+
+describe('/api/articles', ()=> {
+    test('200: responds with 200 status code and returns all articles with comment count', ()=> {
+        return request(app)
+            .get('/api/articles')
+            .expect(200)
+            .then(({ body })=> {
+                expect(body.articles).toHaveLength(13)
+                body.articles.forEach((article)=> {
+                    expect(article).toEqual({
+                        article_id: expect.any(Number),
+                        title: expect.any(String),
+                        topic: expect.any(String),
+                        author: expect.any(String),
+                        created_at: expect.any(String),
+                        votes: expect.any(Number),
+                        article_img_url: expect.any(String),
+                        comment_count: expect.any(Number)
+                    })
+                })
+            })
+    })
+    test('200: check response is sorted by date in descending order', ()=> {
+        return request(app)
+            .get('/api/articles')
+            .expect(200)
+            .then(({ body })=> {
+                expect(body.articles).toBeSorted({ descending: true, key: "created_at" })
+            })
+    })
+})
