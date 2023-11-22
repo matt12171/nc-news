@@ -83,12 +83,13 @@ describe('/api/topics/:article_id', ()=> {
     })
 })
 
-describe.only('/api/articles', ()=> {
+describe('/api/articles', ()=> {
     test('200: responds with 200 status code and returns all articles with comment count', ()=> {
         return request(app)
             .get('/api/articles')
             .expect(200)
             .then(({ body })=> {
+                expect(body.articles).toHaveLength(13)
                 body.articles.forEach((article)=> {
                     expect(article).toEqual({
                         article_id: expect.any(Number),

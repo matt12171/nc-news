@@ -14,26 +14,25 @@ exports.selectArticleById = (id) => {
 }
 
 exports.selectArticles = () => {
-    return db.query(
-        `SELECT * FROM articles
-        ORDER BY created_at DESC`
-    ).then((response) => {
-        const promise1 = response.rows.map((article)=> {
-            return db.query(
-                `SELECT * FROM comments
-                WHERE article_id = $1`, [article.article_id]
-            )
-            .then((comments)=> {
-                article.comment_count = comments.rows.length
-                delete article.body
-                return article
-            })
+    return db.query(`
+        SELECT 
+            articles.*, 
+            COUNT(comments.article_id) AS comment_count
+        FROM 
+            articles
+        LEFT JOIN 
+            comments ON articles.article_id = comments.article_id
+        GROUP BY 
+            articles.article_id
+        ORDER BY 
+            articles.created_at DESC;
+    `).then((response) => {
+        response.rows.forEach((article) => {
+            delete article.body
+            article.comment_count = Number(article.comment_count)
         })
-        return Promise.all(promise1)
-            .then((articles) => {
-                return articles
-            })
-        
-    })
-}
+        return response.rows;
+    });
+};
+
 
