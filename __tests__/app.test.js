@@ -132,4 +132,28 @@ describe('/api/topics/:article_id/comments', ()=> {
                 })
             })
     })
+    test('200: responds with 200 status when given valid id with no comments', ()=> {
+        return request(app)
+            .get('/api/articles/2/comments')
+            .expect(200)
+            .then(({body}) => {
+                expect(body.comments).toEqual([])
+            })
+    })
+    test('400: response with 400 status code and error msg when valid id does not exist', ()=> {
+        return request(app)
+            .get('/api/articles/999999/comments')
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe('bad request')
+            })
+    })
+    test('400: response with 400 status code and error msg when id is incorrect format', ()=> {
+        return request(app)
+            .get('/api/articles/dog/comments')
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe('bad request')
+            })
+    })
 })

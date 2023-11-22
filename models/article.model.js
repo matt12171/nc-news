@@ -1,4 +1,5 @@
 const db = require('../db/connection')
+const { checkExists } = require('../utils')
 
 exports.selectArticleById = (id) => {
     return db.query(
@@ -42,10 +43,10 @@ exports.selectCommentsByArticle = (id) => {
     WHERE article_id = $1
     ORDER BY comments.created_at DESC`, [id])
     .then((response) => {
-        if (response.rows.length === 0) {
-            return Promise.reject({ status: 400, msg: 'bad request' })
-        } else {
+        console.log(response.rows)
+        return checkExists("articles", "article_id", id)
+        .then(()=> {
             return response.rows
-        }
+        })
     })
 }
