@@ -121,6 +121,7 @@ describe('/api/topics/:article_id/comments', ()=> {
             .expect(200)
             .then(({ body }) => {
                 expect(body.comments).toHaveLength(11)
+                expect(body.comments).toBeSorted({ descending: true, key: "created_at" })
                 body.comments.forEach((comment)=> {
                     expect(comment).toEqual({
                         comment_id: expect.any(Number),
@@ -141,12 +142,12 @@ describe('/api/topics/:article_id/comments', ()=> {
                 expect(body.comments).toEqual([])
             })
     })
-    test('400: response with 400 status code and error msg when valid id does not exist', ()=> {
+    test('404: response with 404 status code and error msg when valid id does not exist', ()=> {
         return request(app)
             .get('/api/articles/999999/comments')
-            .expect(400)
+            .expect(404)
             .then(({ body }) => {
-                expect(body.msg).toBe('bad request')
+                expect(body.msg).toBe('not found')
             })
     })
     test('400: response with 400 status code and error msg when id is incorrect format', ()=> {
