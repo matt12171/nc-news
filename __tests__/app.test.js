@@ -113,3 +113,23 @@ describe('/api/articles', ()=> {
             })
     })
 })
+
+describe('/api/topics/:article_id/comments', ()=> {
+    test('200: responds with 200 status code and comments', ()=> {
+        return request(app)
+            .get('/api/articles/1/comments')
+            .expect(200)
+            .then(({ body }) => {
+                body.comments.forEach((comment)=> {
+                    expect(comment).toEqual({
+                        comment_id: expect.any(Number),
+                        votes: expect.any(Number),
+                        created_at: expect.any(String),
+                        author: expect.any(String),
+                        body: expect.any(String),
+                        article_id: 1
+                    })
+                })
+            })
+    })
+})

@@ -6,7 +6,7 @@ const {
     handleServerErrors,
   } = require("./errors");
 const { getApi } = require('./controllers/api.controller');
-const { getArticlesById, getArticles } = require('./controllers/article.controller');
+const { getArticlesById, getArticles, getCommentsForArticle } = require('./controllers/article.controller');
 
 const app = express()
 
@@ -15,6 +15,7 @@ app.get('/api', getApi)
 app.get('/api/topics', getTopics)
 app.get('/api/articles/:article_id', getArticlesById)
 app.get('/api/articles', getArticles)
+app.get('/api/articles/:article_id/comments', getCommentsForArticle)
 
 
 
