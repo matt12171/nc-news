@@ -120,6 +120,7 @@ describe('/api/topics/:article_id/comments', ()=> {
             .get('/api/articles/1/comments')
             .expect(200)
             .then(({ body }) => {
+                expect(body.comments).toHaveLength(11)
                 body.comments.forEach((comment)=> {
                     expect(comment).toEqual({
                         comment_id: expect.any(Number),
