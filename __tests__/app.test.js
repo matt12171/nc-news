@@ -244,4 +244,29 @@ describe('/api/topics/:article_id/comments', ()=> {
             })
     })
 })
+describe('DELETE /api/comments/:comment_id', ()=> {
+    test('204: deletes comment by comment id', ()=> {
+        return request(app)
+            .delete('/api/comments/2')
+            .expect(204)
+    })
+    test('400: response with 400 status code and error msg when id format is incorrect', ()=> {
+        return request(app)
+            .delete('/api/comments/dog')
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe('bad request')
+            })
+    })
+    test('404: response with 404 status code and error msg when id does not exist', ()=> {
+        return request(app)
+            .delete('/api/comments/99999')
+            .expect(404)
+            .then(({ body }) => {
+                expect(body.msg).toBe('not found')
+            })
+    })
+
+})
+
 

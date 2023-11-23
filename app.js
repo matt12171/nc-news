@@ -7,6 +7,7 @@ const {
   } = require("./errors");
 const { getApi } = require('./controllers/api.controller');
 const { getArticlesById, getArticles, postComment, getCommentsForArticle} = require('./controllers/article.controller');
+const { deleteComment } = require('./controllers/comment.controller');
 
 
 
@@ -22,7 +23,7 @@ app.get('/api/articles/:article_id/comments', getCommentsForArticle)
 
 app.post('/api/articles/:article_id/comments', postComment)
 
-
+app.delete('/api/comments/:comment_id', deleteComment)
 
 
 app.use(handlepsqlErrors);
