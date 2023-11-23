@@ -6,6 +6,7 @@ const {
     handleServerErrors,
   } = require("./errors");
 const { getApi } = require('./controllers/api.controller');
+const { deleteComment } = require('./controllers/comment.controller');
 const { getArticlesById, getArticles, postComment, getCommentsForArticle, patchVotesByArticleId} = require('./controllers/article.controller');
 
 const app = express()
@@ -21,7 +22,7 @@ app.patch('/api/articles/:article_id', patchVotesByArticleId)
 
 app.post('/api/articles/:article_id/comments', postComment)
 
-
+app.delete('/api/comments/:comment_id', deleteComment)
 
 
 
