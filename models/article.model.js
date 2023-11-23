@@ -21,20 +21,42 @@ exports.selectArticleById = (id) => {
         })
 }
 
-exports.selectArticles = () => {
-    return db.query(`
-        SELECT 
-            articles.*, 
-            COUNT(comments.article_id) AS comment_count
-        FROM 
-            articles
-        LEFT JOIN 
-            comments ON articles.article_id = comments.article_id
-        GROUP BY 
-            articles.article_id
-        ORDER BY 
-            articles.created_at DESC;
-    `).then((response) => {
+exports.selectArticles = (topic) => {
+    console.log(topic, '<------')
+    const validTopic = [
+        "mitch",
+        "cats"
+    ]
+
+    if (topic && !validTopic.includes(topic)) {
+        return Promise.reject({ status: 400, msg: "bad request" });
+    }
+
+    let queryString = `
+    SELECT 
+        articles.*, 
+        COUNT(comments.article_id) AS comment_count
+    FROM 
+        articles
+    LEFT JOIN 
+        comments ON articles.article_id = comments.article_id `
+
+    const queryValues = []
+
+    if (topic) {
+        queryValues.push(topic)
+        queryString += `WHERE topic = $1 `
+    }
+
+    queryString+= `
+    GROUP BY 
+        articles.article_id
+    ORDER BY 
+        articles.created_at DESC`
+
+    console.log(queryString)
+
+    return db.query(queryString, queryValues).then((response) => {
         response.rows.forEach((article) => {
             delete article.body
             article.comment_count = Number(article.comment_count)
