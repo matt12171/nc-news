@@ -15,7 +15,7 @@ afterAll(() => {
     return db.end()
 })
 
-describe('/api/topics', ()=> {
+describe('GET /api/topics', ()=> {
     test('200: responds with 200 status code and an array of topic objects', ()=> {
         return request(app)
             .get('/api/topics')
@@ -32,7 +32,7 @@ describe('/api/topics', ()=> {
     })
 })
 
-describe('/api', ()=> {
+describe('GET /api', ()=> {
     test('200: responds with 200 status code and endpoints for api', ()=> {
         return fs.readFile('/Users/work/northcoders/backend/be-nc-news/endpoints.json', { encoding: 'utf-8' })
             .then((endpointsFile) => {
@@ -47,7 +47,7 @@ describe('/api', ()=> {
     })
 })
 
-describe('/api/topics/:article_id', ()=> {
+describe('GET /api/topics/:article_id', ()=> {
     test('200: responds with 200 status code and correct article', ()=> {
         return request(app)
             .get('/api/articles/1')
@@ -83,7 +83,7 @@ describe('/api/topics/:article_id', ()=> {
     })
 })
 
-describe('/api/articles', ()=> {
+describe('GET /api/articles', ()=> {
     test('200: responds with 200 status code and returns all articles with comment count', ()=> {
         return request(app)
             .get('/api/articles')
@@ -199,7 +199,7 @@ describe('POST /api/articles/:article_id/comments', ()=> {
     
 })
 
-describe('/api/topics/:article_id/comments', ()=> {
+describe('GET /api/topics/:article_id/comments', ()=> {
     test('200: responds with 200 status code and comments', ()=> {
         return request(app)
             .get('/api/articles/1/comments')
