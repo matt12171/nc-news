@@ -270,3 +270,88 @@ describe('DELETE /api/comments/:comment_id', ()=> {
 })
 
 
+
+describe('PATCH /api/articles/:article_id', ()=> {
+    test('200: Correctly updates votes by article id and responds with new article', ()=> {
+        const input = { inc_votes: 5 }
+        return request(app)
+            .patch('/api/articles/2')
+            .send(input)
+            .expect(200)
+            .then(({ body })=> {         
+                expect(body.article).toEqual({
+                    article_id: 2,
+                    title: 'Sony Vaio; or, The Laptop',
+                    topic: 'mitch',
+                    author: 'icellusedkars',
+                    body: 'Call me Mitchell. Some years ago—never mind how long precisely—having little or no money in my purse, and nothing particular to interest me on shore, I thought I would buy a laptop about a little and see the codey part of the world. It is a way I have of driving off the spleen and regulating the circulation. Whenever I find myself growing grim about the mouth; whenever it is a damp, drizzly November in my soul; whenever I find myself involuntarily pausing before coffin warehouses, and bringing up the rear of every funeral I meet; and especially whenever my hypos get such an upper hand of me, that it requires a strong moral principle to prevent me from deliberately stepping into the street, and methodically knocking people’s hats off—then, I account it high time to get to coding as soon as I can. This is my substitute for pistol and ball. With a philosophical flourish Cato throws himself upon his sword; I quietly take to the laptop. There is nothing surprising in this. If they but knew it, almost all men in their degree, some time or other, cherish very nearly the same feelings towards the the Vaio with me.',
+                    created_at: '2020-10-16T05:03:00.000Z',
+                    votes: 5,
+                    article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700'               
+                })
+            })
+    })
+    test('400: response with 400 status code and error msg when id is incorrect format', ()=> {
+        const input = { inc_votes: 5 }
+        return request(app)
+            .patch('/api/articles/dog')
+            .send(input)
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe('bad request')
+            })
+    })
+    test('404: response with 404 status code and error msg when valid id does not exist', ()=> {
+        const input = { inc_votes: 5 }
+        return request(app)
+            .patch('/api/articles/999999')
+            .send(input)
+            .expect(404)
+            .then(({ body }) => {
+                expect(body.msg).toBe('not found')
+            })
+    })
+    test('400: response with 400 status code and error msg when request is wrong format - wrong key', ()=> {
+        const input = { hello: 5 }
+        return request(app)
+            .patch('/api/articles/2')
+            .send(input)
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe('bad request')
+            })
+    })
+    test('400: response with 400 status code and error msg when request is wrong format - wrong value', ()=> {
+        const input = { inc_votes: "hello" }
+        return request(app)
+            .patch('/api/articles/2')
+            .send(input)
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe('bad request')
+            })
+    })
+    test('200: responds with 200 code and ignores any additional key/values present', ()=> {
+        const input = { 
+            inc_votes: 5,
+            random: 'dog'
+     }
+        return request(app)
+            .patch('/api/articles/2')
+            .send(input)
+            .expect(200)
+            .then(({ body })=> {          
+                expect(body.article).toEqual({
+                    article_id: 2,
+                    title: 'Sony Vaio; or, The Laptop',
+                    topic: 'mitch',
+                    author: 'icellusedkars',
+                    body: 'Call me Mitchell. Some years ago—never mind how long precisely—having little or no money in my purse, and nothing particular to interest me on shore, I thought I would buy a laptop about a little and see the codey part of the world. It is a way I have of driving off the spleen and regulating the circulation. Whenever I find myself growing grim about the mouth; whenever it is a damp, drizzly November in my soul; whenever I find myself involuntarily pausing before coffin warehouses, and bringing up the rear of every funeral I meet; and especially whenever my hypos get such an upper hand of me, that it requires a strong moral principle to prevent me from deliberately stepping into the street, and methodically knocking people’s hats off—then, I account it high time to get to coding as soon as I can. This is my substitute for pistol and ball. With a philosophical flourish Cato throws himself upon his sword; I quietly take to the laptop. There is nothing surprising in this. If they but knew it, almost all men in their degree, some time or other, cherish very nearly the same feelings towards the the Vaio with me.',
+                    created_at: '2020-10-16T05:03:00.000Z',
+                    votes: 5,
+                    article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700' 
+                })
+            })
+    })
+})
+

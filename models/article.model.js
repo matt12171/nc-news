@@ -1,3 +1,4 @@
+const { response } = require('../app')
 const db = require('../db/connection')
 const {
     convertTimestampToDate,
@@ -82,11 +83,29 @@ exports.selectCommentsByArticle = (id) => {
     return db.query(`
     SELECT * FROM comments
     WHERE article_id = $1
-    ORDER BY comments.created_at DESC`, [id])
+    ORDER BY comments.created_at DESC;`, [id])
     .then((response) => {
         return checkExists("articles", "article_id", id)
         .then(()=> {
             return response.rows
         })
+    })
+}
+
+exports.updateVotesByArticleId = (votes, id) => {
+    const votesKey = Object.keys(votes)
+    if (typeof votes.inc_votes !== 'number' || votesKey.indexOf('inc_votes') === -1) {
+        return Promise.reject({ status: 400, msg: 'bad request' })
+    }
+    return db.query(`
+    UPDATE articles
+    SET votes = votes + $1
+    WHERE article_id = $2
+    RETURNING *;`, [votes.inc_votes, id])
+    .then((response)=> {
+        if (response.rows.length === 0) {
+            return Promise.reject({ status: 404, msg: 'not found' })
+        }
+        return response.rows[0]
     })
 }
