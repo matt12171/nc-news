@@ -113,6 +113,25 @@ describe('GET /api/articles', ()=> {
                 expect(body.articles).toBeSorted({ descending: true, key: "created_at" })
             })
     })
+    test('200: check response is filtered by topic query', ()=> {
+        return request(app)
+            .get('/api/articles?topic=cats')
+            .expect(200)
+            .then(({ body })=> {
+                expect(body.articles).toBeSorted({ descending: true, key: "created_at" })
+                expect(body.articles).toHaveLength(1)
+                
+            })
+    })
+    test('200: responds 200 and an empty array when topic finds no matches', ()=> {
+        return request(app)
+            .get('/api/articles?topic=hello')
+            .expect(200)
+            .then(({ body })=> {
+                expect(body.articles).toEqual([])
+            })
+    })
+    
 })
 
 
@@ -351,6 +370,23 @@ describe('PATCH /api/articles/:article_id', ()=> {
                     created_at: '2020-10-16T05:03:00.000Z',
                     votes: 5,
                     article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700' 
+                })
+            })
+    })
+})
+
+describe('GET /api/users', ()=> {
+    test('200: responds with 200 status code and returns all users', ()=> {
+        return request(app)
+            .get('/api/users')
+            .expect(200)
+            .then(({ body })=> {
+                body.users.forEach((user)=> {
+                    expect(user).toEqual({
+                        username: expect.any(String),
+                        name: expect.any(String),
+                        avatar_url: expect.any(String)
+                    })
                 })
             })
     })
