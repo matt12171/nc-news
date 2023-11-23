@@ -5,6 +5,7 @@ const {
     formatComments,
   } = require('../db/seeds/utils');
 const format = require('pg-format');
+const { checkExists } = require('../utils')
 
 exports.selectArticleById = (id) => {
     return db.query(
@@ -41,7 +42,6 @@ exports.selectArticles = () => {
     });
 };
 
-
 exports.insertComment = (id, newComment) => {
     if (!newComment.hasOwnProperty('username') || !newComment.hasOwnProperty('body')) {
         return Promise.reject({ status: 400, msg: 'bad request' })
@@ -75,7 +75,17 @@ exports.insertComment = (id, newComment) => {
               .then((response) => {
                     return response.rows[0]
               })
-            });
+   });
         
-    
+exports.selectCommentsByArticle = (id) => {
+    return db.query(`
+    SELECT * FROM comments
+    WHERE article_id = $1
+    ORDER BY comments.created_at DESC`, [id])
+    .then((response) => {
+        return checkExists("articles", "article_id", id)
+        .then(()=> {
+            return response.rows
+        })
+    })
 }
