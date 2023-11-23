@@ -112,6 +112,25 @@ describe('GET /api/articles', ()=> {
                 expect(body.articles).toBeSorted({ descending: true, key: "created_at" })
             })
     })
+    test('200: check response is filtered by topic query', ()=> {
+        return request(app)
+            .get('/api/articles?topic=cats')
+            .expect(200)
+            .then(({ body })=> {
+                expect(body.articles).toBeSorted({ descending: true, key: "created_at" })
+                expect(body.articles).toHaveLength(1)
+                
+            })
+    })
+    test('200: responds 200 and an empty array when topic finds no matches', ()=> {
+        return request(app)
+            .get('/api/articles?topic=hello')
+            .expect(200)
+            .then(({ body })=> {
+                expect(body.articles).toEqual([])
+            })
+    })
+    
 })
 
 
@@ -371,3 +390,4 @@ describe('GET /api/users', ()=> {
             })
     })
 })
+
