@@ -32,7 +32,7 @@ exports.getCommentsForArticle = (req, res, next) => {
 
 exports.patchVotesByArticleId = (req, res, next) => {
     const id = req.params.article_id
-    const votes = req.body.inc_votes
+    const votes = req.body
     updateVotesByArticleId(votes, id).then((article)=> {
         res.status(200).send({article})
     })

@@ -180,4 +180,66 @@ describe('PATCH /api/articles/:article_id', ()=> {
                 })
             })
     })
+    test('400: response with 400 status code and error msg when id is incorrect format', ()=> {
+        const input = { inc_votes: 5 }
+        return request(app)
+            .patch('/api/articles/dog')
+            .send(input)
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe('bad request')
+            })
+    })
+    test('404: response with 404 status code and error msg when valid id does not exist', ()=> {
+        const input = { inc_votes: 5 }
+        return request(app)
+            .patch('/api/articles/999999')
+            .send(input)
+            .expect(404)
+            .then(({ body }) => {
+                expect(body.msg).toBe('not found')
+            })
+    })
+    test('400: response with 400 status code and error msg when request is wrong format - wrong key', ()=> {
+        const input = { hello: 5 }
+        return request(app)
+            .patch('/api/articles/2')
+            .send(input)
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe('bad request')
+            })
+    })
+    test('400: response with 400 status code and error msg when request is wrong format - wrong value', ()=> {
+        const input = { inc_votes: "hello" }
+        return request(app)
+            .patch('/api/articles/2')
+            .send(input)
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe('bad request')
+            })
+    })
+    test('200: responds with 200 code and ignores any additional key/values present', ()=> {
+        const input = { 
+            inc_votes: 5,
+            random: 'dog'
+     }
+        return request(app)
+            .patch('/api/articles/2')
+            .send(input)
+            .expect(200)
+            .then(({ body })=> {          
+                expect(body.article).toEqual({
+                    article_id: expect.any(Number),
+                    title: expect.any(String),
+                    topic: expect.any(String),
+                    author: expect.any(String),
+                    body: expect.any(String),
+                    created_at: expect.any(String),
+                    votes: 5,
+                    article_img_url: expect.any(String)
+                })
+            })
+    })
 })
