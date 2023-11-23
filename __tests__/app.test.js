@@ -161,7 +161,7 @@ describe('POST /api/articles/:article_id/comments', ()=> {
                 expect(body.msg).toBe('not found')
             })
     })
-    test('400: responds with 400 when input format is incorrect', ()=> {
+    test('201: responds with 200 and ignores any additional key/values', ()=> {
         const input = {
             username: 'butter_bridge',
             body: 'Hello world!',
@@ -170,9 +170,16 @@ describe('POST /api/articles/:article_id/comments', ()=> {
         return request(app)
             .post('/api/articles/2/comments')
             .send(input)
-            .expect(400)
-            .then(({body})=> {
-                expect(body.msg).toBe('bad request')
+            .expect(201)
+            .then(({ body })=> {
+                expect(body.comment).toMatchObject({
+                    comment_id: expect.any(Number),
+                    votes: expect.any(Number),
+                    created_at: expect.any(String),
+                    author: 'butter_bridge',
+                    body: 'Hello world!',
+                    article_id: 2
+                })
             })
     })
     test('404: responds with 404 when input is correct format but username does not exist', ()=> {

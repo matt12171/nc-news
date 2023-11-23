@@ -43,11 +43,9 @@ exports.selectArticles = () => {
 
 
 exports.insertComment = (id, newComment) => {
-    if (Object.values(newComment).length !== 2 || !newComment.hasOwnProperty('username') || !newComment.hasOwnProperty('body')) {
+    if (!newComment.hasOwnProperty('username') || !newComment.hasOwnProperty('body')) {
         return Promise.reject({ status: 400, msg: 'bad request' })
     }
-
-
 
     const formedComment = [{
         body: newComment.body,
@@ -59,11 +57,7 @@ exports.insertComment = (id, newComment) => {
     return db.query(`SELECT * FROM articles;`)
         .then((response)=> {
             const articleIdLookup = createRef(response.rows, 'title', 'article_id');
-            // const articleIds = Object.values(articleIdLookup)
             
-            // if (!articleIds.includes(Number(id)) && typeof Number(id) === 'number') {
-            //     return Promise.reject({ status: 404, msg: 'not found' })
-            // }
             const formattedCommentData = formatComments(formedComment, articleIdLookup);
             return db.query(format(
                 `INSERT INTO comments (body, author, article_id, votes, created_at) VALUES %L
