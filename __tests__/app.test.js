@@ -117,20 +117,20 @@ describe('GET /api/articles', ()=> {
             .get('/api/articles?topic=cats')
             .expect(200)
             .then(({ body })=> {
-                console.log(body.articles)
                 expect(body.articles).toBeSorted({ descending: true, key: "created_at" })
                 expect(body.articles).toHaveLength(1)
                 
             })
     })
-    test('400: responds 400 when given a topic that does not exist', ()=> {
+    test('200: responds 200 and an empty array when topic finds no matches', ()=> {
         return request(app)
             .get('/api/articles?topic=hello')
-            .expect(400)
+            .expect(200)
             .then(({ body })=> {
-                expect(body.msg).toBe('bad request')
+                expect(body.articles).toEqual([])
             })
     })
+    
 })
 
 

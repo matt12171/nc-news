@@ -15,7 +15,6 @@ exports.getArticles = (req, res, next) => {
     const { topic } = req.query
 
     selectArticles(topic).then((articles) => {
-        console.log(articles)
         res.status(200).send({articles})
     })
     .catch((err)=> {

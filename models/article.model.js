@@ -22,14 +22,8 @@ exports.selectArticleById = (id) => {
 }
 
 exports.selectArticles = (topic) => {
-    console.log(topic, '<------')
-    const validTopic = [
-        "mitch",
-        "cats"
-    ]
-
-    if (topic && !validTopic.includes(topic)) {
-        return Promise.reject({ status: 400, msg: "bad request" });
+    if (topic && typeof topic !== 'string') {
+        return Promise.reject({ status: 400, msg: "bad request" })
     }
 
     let queryString = `
@@ -53,8 +47,6 @@ exports.selectArticles = (topic) => {
         articles.article_id
     ORDER BY 
         articles.created_at DESC`
-
-    console.log(queryString)
 
     return db.query(queryString, queryValues).then((response) => {
         response.rows.forEach((article) => {
