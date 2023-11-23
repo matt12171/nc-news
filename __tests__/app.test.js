@@ -175,7 +175,7 @@ describe('POST /api/articles/:article_id/comments', ()=> {
                 expect(body.msg).toBe('bad request')
             })
     })
-    test('404: responds with 400 when input is correct format but username does not exist', ()=> {
+    test('404: responds with 404 when input is correct format but username does not exist', ()=> {
         const input = {
             username: 'Matt',
             body: 'Hello world!',
