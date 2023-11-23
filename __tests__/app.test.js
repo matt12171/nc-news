@@ -159,3 +159,25 @@ describe('/api/topics/:article_id/comments', ()=> {
             })
     })
 })
+
+describe('PATCH /api/articles/:article_id', ()=> {
+    test('200: Correctly updates votes by article id and responds with new article', ()=> {
+        const input = { inc_votes: 5 }
+        return request(app)
+            .patch('/api/articles/2')
+            .send(input)
+            .expect(200)
+            .then(({ body })=> {          
+                expect(body.article).toEqual({
+                    article_id: expect.any(Number),
+                    title: expect.any(String),
+                    topic: expect.any(String),
+                    author: expect.any(String),
+                    body: expect.any(String),
+                    created_at: expect.any(String),
+                    votes: 5,
+                    article_img_url: expect.any(String)
+                })
+            })
+    })
+})
