@@ -1,5 +1,11 @@
 const { response } = require('../app')
 const db = require('../db/connection')
+const {
+    convertTimestampToDate,
+    createRef,
+    formatComments,
+  } = require('../db/seeds/utils');
+const format = require('pg-format');
 const { checkExists } = require('../utils')
 
 exports.selectArticleById = (id) => {
@@ -8,7 +14,7 @@ exports.selectArticleById = (id) => {
         WHERE article_id = $1;`, [id])
         .then((response) => {
             if (response.rows.length === 0) {
-                return Promise.reject({ status: 400, msg: 'bad request' })
+                return Promise.reject({ status: 404, msg: 'not found' })
             } else {
                 return response.rows[0]
             }
@@ -37,7 +43,42 @@ exports.selectArticles = () => {
     });
 };
 
+exports.insertComment = (id, newComment) => {
+    if (!newComment.hasOwnProperty('username') || !newComment.hasOwnProperty('body')) {
+        return Promise.reject({ status: 400, msg: 'bad request' })
+    }
 
+    const formedComment = [{
+        body: newComment.body,
+        votes: 0,
+        author: newComment.username,
+        article_id: Number(id),
+        created_at: Date.now(),
+    }]
+    return db.query(`SELECT * FROM articles;`)
+        .then((response)=> {
+            const articleIdLookup = createRef(response.rows, 'title', 'article_id');
+            
+            const formattedCommentData = formatComments(formedComment, articleIdLookup);
+            return db.query(format(
+                `INSERT INTO comments (body, author, article_id, votes, created_at) VALUES %L
+                RETURNING *`,
+                formattedCommentData.map(
+                  ({ body, author, article_id, votes = 0, created_at }) => [
+                    body,
+                    author,
+                    article_id,
+                    votes,
+                    created_at,
+                  ]
+                )
+              ))
+              .then((response) => {
+                    return response.rows[0]
+              })
+   })
+}
+        
 exports.selectCommentsByArticle = (id) => {
     return db.query(`
     SELECT * FROM comments
