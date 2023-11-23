@@ -6,8 +6,8 @@ const {
     handleServerErrors,
   } = require("./errors");
 const { getApi } = require('./controllers/api.controller');
-const { getArticlesById, getArticles, postComment } = require('./controllers/article.controller');
-const { getArticlesById, getArticles, getCommentsForArticle } = require('./controllers/article.controller');
+const { getArticlesById, getArticles, postComment, getCommentsForArticle} = require('./controllers/article.controller');
+
 
 
 const app = express()

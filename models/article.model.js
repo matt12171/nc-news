@@ -75,7 +75,8 @@ exports.insertComment = (id, newComment) => {
               .then((response) => {
                     return response.rows[0]
               })
-   });
+   })
+}
         
 exports.selectCommentsByArticle = (id) => {
     return db.query(`

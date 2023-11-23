@@ -1,5 +1,5 @@
-const { selectArticleById, selectArticles, insertComment } = require("../models/article.model")
-const { selectArticleById, selectArticles, selectCommentsByArticle } = require("../models/article.model")
+const { selectArticleById, selectArticles, insertComment, selectCommentsByArticle } = require("../models/article.model")
+
 
 exports.getArticlesById = (req, res, next) => {
     const id = req.params.article_id
