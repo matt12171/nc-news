@@ -1,5 +1,6 @@
 const { selectArticleById, selectArticles, insertComment, selectCommentsByArticle, updateVotesByArticleId } = require("../models/article.model")
 
+
 exports.getArticlesById = (req, res, next) => {
     const id = req.params.article_id
 
@@ -10,6 +11,9 @@ exports.getArticlesById = (req, res, next) => {
         next(err)
     })
 }
+
+
+
 
 exports.getArticles = (req, res, next) => {
     selectArticles().then((articles) => {
