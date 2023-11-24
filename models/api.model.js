@@ -11,7 +11,6 @@ exports.selectTopics = () => {
 }
 
 exports.selectApi = () => {
-    console.log(process.cwd())
     return fs.readFile('./endpoints.json', { encoding: "utf-8" })
         .then((endpoint) => {
             return JSON.parse(endpoint)
