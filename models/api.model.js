@@ -11,7 +11,8 @@ exports.selectTopics = () => {
 }
 
 exports.selectApi = () => {
-    return fs.readFile('/Users/work/northcoders/backend/be-nc-news/endpoints.json', { encoding: "utf-8" })
+    console.log(process.cwd())
+    return fs.readFile('./endpoints.json', { encoding: "utf-8" })
         .then((endpoint) => {
             return JSON.parse(endpoint)
         })
