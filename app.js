@@ -6,7 +6,7 @@ const {
   handleServerErrors,
 } = require("./errors");
 const { getApi } = require("./controllers/api.controller");
-const { deleteComment } = require("./controllers/comment.controller");
+const { deleteComment, patchVotesByCommentId } = require("./controllers/comment.controller");
 const {
   getArticlesById,
   getArticles,
@@ -28,6 +28,7 @@ app.get("/api/articles/:article_id/comments", getCommentsForArticle);
 app.get("/api/users", getUsers);
 
 app.patch("/api/articles/:article_id", patchVotesByArticleId);
+app.patch("/api/comments/:comment_id", patchVotesByCommentId);
 
 app.post("/api/articles/:article_id/comments", postComment);
 
